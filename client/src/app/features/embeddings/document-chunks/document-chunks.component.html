@@ -1,0 +1,69 @@
+<div class="document-chunks-container">
+  <div class="document-chunks-header">
+    <div class="document-chunks-header__left">
+      <button class="btn btn--secondary btn--back" (click)="goBack()">
+        ← Back
+      </button>
+      <h2 class="document-chunks-header__title">Document Chunks</h2>
+    </div>
+    <button class="btn btn--primary" (click)="loadChunks()" [disabled]="isLoading">
+      Refresh
+    </button>
+  </div>
+
+  <div *ngIf="documentId" class="document-chunks-info">
+    <p class="document-chunks-info__text">
+      Document ID: <strong>{{ documentId }}</strong>
+    </p>
+    <p *ngIf="chunks.length > 0" class="document-chunks-info__text">
+      Total Chunks: <strong>{{ chunks.length }}</strong>
+    </p>
+  </div>
+
+  <div *ngIf="isLoading" class="document-chunks-loading">
+    <app-loading-spinner size="large" message="Loading chunks..."></app-loading-spinner>
+  </div>
+
+  <div *ngIf="!isLoading" class="document-chunks-content">
+    <div *ngIf="chunks.length === 0" class="document-chunks-empty">
+      <p class="document-chunks-empty__text">No chunks found for this document.</p>
+    </div>
+
+    <div *ngIf="chunks.length > 0" class="chunks-list">
+      <div *ngFor="let chunk of chunks" class="chunk-card">
+        <div class="chunk-card__header">
+          <div class="chunk-card__info">
+            <span class="chunk-card__id">Chunk ID: {{ chunk.chunkId }}</span>
+            <span class="chunk-card__vector-size">Vector Size: {{ chunk.embeddingVectorSize }}</span>
+          </div>
+          <button 
+            class="btn btn--small btn--danger" 
+            (click)="confirmDelete(chunk.chunkId)"
+            title="Delete Chunk"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="chunk-card__content">
+          <div class="chunk-card__preview">
+            <p class="chunk-card__text" [class.chunk-card__text--expanded]="isExpanded(chunk.chunkId)">
+              {{ getPreviewText(chunk) }}
+            </p>
+          </div>
+          <button 
+            *ngIf="shouldShowExpandButton(chunk)"
+            class="chunk-card__expand-btn"
+            (click)="toggleExpand(chunk.chunkId)"
+          >
+            {{ isExpanded(chunk.chunkId) ? 'Show Less' : 'Show More' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-confirmation-dialog
+    (confirmed)="onDeleteConfirmed()"
+  ></app-confirmation-dialog>
+</div>
+

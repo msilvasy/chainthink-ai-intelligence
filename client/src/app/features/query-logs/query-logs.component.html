@@ -1,0 +1,125 @@
+<section class="query-logs-page">
+  <div class="query-logs-page__heading">
+    <div>
+      <p class="query-logs-page__eyebrow">Document AI activity</p>
+      <h2>Query Logs</h2>
+      <p>Review saved questions, AI responses, relevance, and processing time.</p>
+    </div>
+    <div class="query-logs-page__count" *ngIf="!isLoading">{{ logs.length }} records</div>
+  </div>
+
+  <div class="filter-card">
+    <div class="filter-card__icon">&#128269;</div>
+    <div class="filter-card__content">
+      <label for="query-log-user-id">User ID filter</label>
+      <div class="filter-card__controls">
+        <input id="query-log-user-id" [(ngModel)]="userId" (keyup.enter)="loadLogs()"
+          placeholder="Leave empty to show all records" type="text" />
+        <button type="button" class="button button--outline" (click)="clearFilter()"
+          [disabled]="isLoading">Clear</button>
+        <button type="button" class="button button--primary" (click)="loadLogs()" [disabled]="isLoading">Refresh
+          logs</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="query-logs-page__loading">
+    <app-loading-spinner size="large" message="Loading query logs..."></app-loading-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && logs.length === 0" class="empty-state">
+    <div class="empty-state__icon">&#128196;</div>
+    <h3>No query logs found</h3>
+    <p>Try a different user ID, or submit a query to create the first log.</p>
+  </div>
+
+  <section *ngIf="!isLoading && logs.length > 0" class="charts-grid" aria-label="Query log metrics">
+    <article class="chart-card">
+      <div class="chart-card__header">
+        <div>
+          <h3>Query performance</h3>
+          <p>Processing time in seconds and relevance score for the last {{ chartLogs.length }} logs</p>
+        </div>
+        <span class="chart-legend">
+          <i class="chart-legend__mark chart-legend__mark--time"></i>Processing time
+          <i class="chart-legend__mark chart-legend__mark--score"></i>Relevance score
+        </span>
+      </div>
+      <div class="bar-chart" role="img"
+        aria-label="Grouped bar chart showing processing time and relevance score for the latest query logs">
+        <div class="bar-chart__row" *ngFor="let log of chartLogs">
+          <span class="bar-chart__label" [title]="log.query">#{{ log.id }}</span>
+          <div class="bar-chart__series">
+            <div class="bar-chart__metric">
+              <span class="bar-chart__track">
+                <span class="bar-chart__bar bar-chart__bar--time"
+                  [style.width.%]="processingWidth(log.processingTimeMs)"></span>
+              </span>
+              <span class="bar-chart__value">{{ formatProcessingTime(log.processingTimeMs) }}</span>
+            </div>
+            <div class="bar-chart__metric">
+              <span class="bar-chart__track">
+                <span class="bar-chart__bar bar-chart__bar--score"
+                  [style.width.%]="relevanceWidth(log.relevanceScore)"></span>
+              </span>
+              <span class="bar-chart__value">
+                {{ log.relevanceScore === null ? 'N/A' : (log.relevanceScore * 100 | number: '1.1-1') + '%' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="chart-card__note">Each metric is scaled to its highest displayed value; labels show the actual values.
+      </p>
+    </article>
+  </section>
+
+  <div *ngIf="!isLoading && logs.length > 0" class="logs-card">
+    <div class="logs-card__header">
+      <span>Saved query history</span>
+      <span class="logs-card__hint">Newest first</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Created</th>
+            <th>User ID</th>
+            <th>Query</th>
+            <th>Relevance</th>
+            <th>Time</th>
+            <th aria-label="Details"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let log of logs">
+            <tr>
+              <td>{{ log.createdAt | date: 'medium' }}</td>
+              <td><span class="user-id">{{ log.userId }}</span></td>
+              <td class="query-cell">{{ log.query }}</td>
+              <td>
+                <span class="score" [class.score--empty]="log.relevanceScore === null">
+                  {{ log.relevanceScore === null ? 'N/A' : (log.relevanceScore * 100 | number: '1.1-1') + '%' }}
+                </span>
+              </td>
+              <td>{{ formatProcessingTime(log.processingTimeMs) }}</td>
+              <td>
+                <button type="button" class="details-button" (click)="toggleDetails(log.id)">
+                  {{ expandedLogId === log.id ? 'Hide' : 'View' }}
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="expandedLogId === log.id" class="response-row">
+              <td colspan="6">
+                <div class="response-panel">
+                  <span>AI response</span>
+                  <p>{{ log.response }}</p>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

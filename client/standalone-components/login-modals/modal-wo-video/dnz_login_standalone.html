@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DNZ Login Modal</title>
+  <style>
+    :root {
+      --green: #69ad25;
+      --green-dark: #5a991e;
+      --text: #111111;
+      --muted: #d8d8d8;
+      --panel-radius: 34px;
+      --modal-width: min(94vw, 1560px);
+      --modal-height: min(92vh, 1090px);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Arial Narrow", "Roboto Condensed", Impact, Haettenschweiler, sans-serif;
+      letter-spacing: -0.02em;
+      background:
+        radial-gradient(circle at 20% 18%, rgba(105, 173, 37, 0.20), transparent 34%),
+        radial-gradient(circle at 88% 10%, rgba(217, 164, 200, 0.34), transparent 34%),
+        linear-gradient(135deg, #f6f6f6 0%, #ececec 48%, #dedede 100%);
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    h1,
+    h2,
+    p {
+      margin: 0;
+    }
+
+    .base-page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 48px 24px;
+    }
+
+    .base-card {
+      width: min(100%, 860px);
+      padding: clamp(38px, 6vw, 78px);
+      border-radius: 32px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 24px 80px rgba(24, 24, 24, 0.12);
+      text-align: center;
+      backdrop-filter: blur(12px);
+    }
+
+    .base-eyebrow {
+      margin-bottom: 14px;
+      color: var(--green);
+      font-size: clamp(17px, 1.5vw, 22px);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .base-title {
+      margin-bottom: 18px;
+      font-family: Impact, "Arial Black", "Arial Narrow", sans-serif;
+      font-size: clamp(44px, 7vw, 92px);
+      line-height: 0.95;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+    }
+
+    .base-copy {
+      max-width: 640px;
+      margin: 0 auto 34px;
+      color: #444444;
+      font-size: clamp(20px, 2vw, 28px);
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .launch-modal {
+      min-width: 245px;
+      height: 70px;
+      padding: 0 38px;
+      border: 0;
+      background: var(--green);
+      color: #ffffff;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-size: 22px;
+      font-weight: 900;
+      transition: background-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+      box-shadow: 0 14px 26px rgba(105, 173, 37, 0.25);
+    }
+
+    .launch-modal:hover {
+      background: var(--green-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 18px 34px rgba(105, 173, 37, 0.34);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(236, 198, 222, 0.82) 0%, rgba(217, 164, 200, 0.82) 45%, rgba(155, 98, 180, 0.86) 100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease;
+    }
+
+    .modal-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .login-shell {
+      position: relative;
+      width: var(--modal-width);
+      min-height: var(--modal-height);
+      display: grid;
+      grid-template-columns: 51% 49%;
+      overflow: hidden;
+      border-radius: var(--panel-radius);
+      background: #ffffff;
+      box-shadow: 0 18px 55px rgba(37, 18, 45, 0.28);
+      transform: translateY(18px) scale(0.985);
+      transition: transform 220ms ease;
+    }
+
+    .modal-overlay.is-open .login-shell {
+      transform: translateY(0) scale(1);
+    }
+
+    .left-panel {
+      position: relative;
+      padding: 75px 7.4vw 70px;
+      background: #ffffff;
+    }
+
+    .breadcrumb {
+      margin: 0 0 10px;
+      font-size: clamp(14px, 1.15vw, 20px);
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #222222;
+    }
+
+    .page-title {
+      font-family: Impact, "Arial Black", "Arial Narrow", sans-serif;
+      font-size: clamp(34px, 2.35vw, 46px);
+      line-height: 0.95;
+      text-transform: uppercase;
+      letter-spacing: 0.015em;
+      margin-bottom: clamp(150px, 17vw, 240px);
+    }
+
+    .form-block {
+      max-width: 565px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 11px;
+      font-size: 18px;
+      font-weight: 900;
+      color: #222222;
+    }
+
+    .input-field {
+      width: 100%;
+      height: 75px;
+      margin-bottom: 28px;
+      padding: 0 16px;
+      border: 2px solid #e7e7e7;
+      outline: none;
+      background: #ffffff;
+      color: #333333;
+      font: 700 21px/1 "Arial Narrow", "Roboto Condensed", sans-serif;
+      box-shadow: none;
+    }
+
+    .input-field:focus,
+    .input-field.active {
+      border-color: #9ab86e;
+    }
+
+    .input-field::placeholder {
+      color: #d4d4d4;
+      font-weight: 700;
+    }
+
+    .form-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin: 19px 0 44px;
+      font-size: clamp(20px, 1.75vw, 27px);
+      font-weight: 900;
+      color: #333333;
+    }
+
+    .remember {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      white-space: nowrap;
+    }
+
+    .checkbox {
+      width: 26px;
+      height: 26px;
+      display: inline-grid;
+      place-items: center;
+      background: var(--green);
+      color: #ffffff;
+      font-size: 24px;
+      line-height: 1;
+      font-family: Arial, sans-serif;
+      font-weight: 900;
+    }
+
+    .forgot {
+      color: #303030;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .button {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      height: 74px;
+      background: var(--green);
+      color: #ffffff;
+      text-transform: uppercase;
+      font: 900 22px/1 "Arial Narrow", "Roboto Condensed", sans-serif;
+      letter-spacing: -0.03em;
+      transition: background-color 160ms ease, transform 160ms ease;
+    }
+
+    .button:hover {
+      background: var(--green-dark);
+      transform: translateY(-1px);
+    }
+
+    .sign-in {
+      width: 315px;
+    }
+
+    .right-panel {
+      position: relative;
+      isolation: isolate;
+      display: grid;
+      place-items: center;
+      padding: 70px 8vw;
+      overflow: hidden;
+      color: #ffffff;
+      background:
+        linear-gradient(rgba(24, 25, 26, 0.72), rgba(6, 6, 6, 0.78)),
+        radial-gradient(circle at 58% 37%, rgba(130, 93, 47, 0.62) 0 7%, transparent 20%),
+        radial-gradient(circle at 73% 42%, rgba(89, 88, 74, 0.72) 0 13%, transparent 31%),
+        linear-gradient(155deg, #393b3b 0%, #272829 27%, #1c1b18 55%, #121212 100%);
+    }
+
+    .right-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      opacity: 0.42;
+      background:
+        radial-gradient(ellipse at 51% 34%, rgba(0, 0, 0, 0.95) 0 3.4%, transparent 3.7%),
+        linear-gradient(79deg, transparent 0 48%, rgba(68, 49, 32, 0.85) 48.4% 52%, transparent 52.4%),
+        linear-gradient(102deg, transparent 0 49%, rgba(175, 139, 84, 0.70) 49.2% 55%, transparent 55.4%),
+        linear-gradient(114deg, transparent 0 43%, rgba(68, 50, 30, 0.70) 43.4% 46%, transparent 46.4%),
+        radial-gradient(ellipse at 50% 55%, rgba(110, 82, 49, 0.86) 0 12%, transparent 12.6%),
+        linear-gradient(70deg, transparent 0 43%, rgba(0, 0, 0, 0.80) 43.2% 48%, transparent 48.4%),
+        repeating-linear-gradient(108deg, transparent 0 46px, rgba(137, 115, 75, 0.28) 48px 50px),
+        linear-gradient(to bottom, transparent 0 67%, rgba(95, 77, 43, 0.75) 68% 100%);
+      filter: blur(0.15px);
+    }
+
+    .close {
+      position: absolute;
+      top: 57px;
+      right: 55px;
+      width: 48px;
+      height: 48px;
+      border: none;
+      background: transparent;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .close::before,
+    .close::after {
+      content: "";
+      position: absolute;
+      top: 21px;
+      left: 3px;
+      width: 48px;
+      height: 7px;
+      border-radius: 8px;
+      background: currentColor;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.45);
+    }
+
+    .close::before {
+      transform: rotate(45deg);
+    }
+
+    .close::after {
+      transform: rotate(-45deg);
+    }
+
+    .benefits-card {
+      width: min(100%, 520px);
+      transform: translate(8px, 42px);
+    }
+
+    .benefits-title {
+      margin-bottom: 10px;
+      font-family: Impact, "Arial Black", sans-serif;
+      font-size: clamp(36px, 3.1vw, 52px);
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .benefits-subtitle {
+      margin-bottom: 39px;
+      font-size: clamp(22px, 1.9vw, 29px);
+      font-weight: 900;
+      color: #f2f2f2;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .benefit-list {
+      display: grid;
+      gap: 22px;
+      margin: 0 0 45px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .benefit-list li {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      align-items: center;
+      gap: 18px;
+      font-size: clamp(22px, 1.9vw, 29px);
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.55);
+    }
+
+    .check {
+      display: inline-block;
+      color: #6ab42b;
+      font-family: Arial, sans-serif;
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .create-account {
+      width: 315px;
+      margin-left: 0;
+    }
+
+    @media (max-width: 900px) {
+      .modal-overlay {
+        padding: 0;
+        align-items: start;
+        overflow-y: auto;
+      }
+
+      .login-shell {
+        width: 100%;
+        min-height: 100vh;
+        grid-template-columns: 1fr;
+        border-radius: 0;
+      }
+
+      .left-panel {
+        padding: 42px 28px 56px;
+      }
+
+      .page-title {
+        margin-bottom: 70px;
+      }
+
+      .right-panel {
+        min-height: 640px;
+        padding: 90px 28px 70px;
+      }
+
+      .close {
+        top: 28px;
+        right: 26px;
+      }
+
+      .benefits-card {
+        transform: none;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .form-options {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .sign-in,
+      .create-account,
+      .launch-modal {
+        width: 100%;
+      }
+
+      .input-field,
+      .button {
+        height: 64px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="base-page">
+    <section class="base-card" aria-labelledby="base-title">
+      <p class="base-eyebrow">DNZ Products</p>
+      <h1 id="base-title" class="base-title">Account Access</h1>
+      <p class="base-copy">Launch the account modal to sign in or create a DNZ account using the split-screen experience shown in the reference.</p>
+      <button class="launch-modal" type="button" data-open-modal>Launch Modal</button>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="login-modal" role="dialog" aria-modal="true" aria-labelledby="login-title" aria-hidden="true">
+    <main class="login-shell" aria-label="DNZ account login">
+      <section class="left-panel" aria-labelledby="login-title">
+        <p class="breadcrumb">Home &gt; Login</p>
+        <h2 id="login-title" class="page-title">Login</h2>
+
+        <form class="form-block" action="#" method="post">
+          <label for="email">Email</label>
+          <input
+            class="input-field active"
+            id="email"
+            name="email"
+            type="email"
+            value="johndoe@dnzproducts.com"
+            autocomplete="email"
+          />
+
+          <label for="password">Password</label>
+          <input
+            class="input-field"
+            id="password"
+            name="password"
+            type="password"
+            placeholder="password"
+            autocomplete="current-password"
+          />
+
+          <div class="form-options">
+            <label class="remember" for="remember">
+              <input id="remember" name="remember" type="checkbox" checked hidden />
+              <span class="checkbox" aria-hidden="true">✓</span>
+              <span>Remember me</span>
+            </label>
+            <a class="forgot" href="#">Forget Your Password?</a>
+          </div>
+
+          <button class="button sign-in" type="submit">Sign In</button>
+        </form>
+      </section>
+
+      <section class="right-panel" aria-labelledby="new-account-title">
+        <button class="close" type="button" aria-label="Close dialog" data-close-modal></button>
+
+        <div class="benefits-card">
+          <h2 id="new-account-title" class="benefits-title">New to DNZ?</h2>
+          <p class="benefits-subtitle">Create an account and enjoy the benefits like:</p>
+
+          <ul class="benefit-list">
+            <li><span class="check" aria-hidden="true">✓</span><span>Checkout faster</span></li>
+            <li><span class="check" aria-hidden="true">✓</span><span>Save multiple shipping addresses</span></li>
+            <li><span class="check" aria-hidden="true">✓</span><span>Access your order history</span></li>
+            <li><span class="check" aria-hidden="true">✓</span><span>Track new orders</span></li>
+            <li><span class="check" aria-hidden="true">✓</span><span>Save items to your Wish List</span></li>
+            <li><span class="check" aria-hidden="true">✓</span><span>Check return and refund status</span></li>
+          </ul>
+
+          <button class="button create-account" type="button">Create Account</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const modal = document.getElementById('login-modal');
+    const openButton = document.querySelector('[data-open-modal]');
+    const closeButton = document.querySelector('[data-close-modal]');
+
+    function openModal() {
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      closeButton.focus();
+    }
+
+    function closeModal() {
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      openButton.focus();
+    }
+
+    openButton.addEventListener('click', openModal);
+    closeButton.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && modal.classList.contains('is-open')) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<div class="upload-container">
+  <div class="upload-card">
+    <h2 class="upload-card__title">Upload Document</h2>
+    <p class="upload-card__description">
+      Upload PDF, DOCX, or TXT files to process and make them searchable.
+    </p>
+
+    <div
+      class="upload-area"
+      [class.upload-area--dragging]="isDragging"
+      [class.upload-area--has-file]="selectedFile"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+    >
+      <input
+        type="file"
+        id="file-input"
+        [accept]="acceptedTypes"
+        (change)="onFileSelected($event)"
+        class="upload-area__input"
+        [disabled]="isUploading"
+      />
+
+      <div *ngIf="!selectedFile && !isUploading" class="upload-area__content">
+        <div class="upload-area__icon">📄</div>
+        <p class="upload-area__text">
+          Drag and drop your document here, or
+          <label for="file-input" class="upload-area__link">browse</label>
+        </p>
+        <p class="upload-area__hint">Supports: PDF, DOCX, TXT (Max 50MB)</p>
+      </div>
+
+      <div *ngIf="selectedFile && !isUploading" class="upload-area__file">
+        <div class="upload-area__file-info">
+          <span class="upload-area__file-name">{{ selectedFile.name }}</span>
+          <span class="upload-area__file-size">{{ getFileSize(selectedFile.size) }}</span>
+        </div>
+        <button class="btn btn--primary" (click)="upload()">Upload</button>
+        <button class="btn btn--secondary" (click)="cancel()">Cancel</button>
+      </div>
+
+      <div *ngIf="isUploading" class="upload-area__progress">
+        <app-loading-spinner size="medium" message="Uploading document..."></app-loading-spinner>
+        <div class="progress-bar">
+          <div class="progress-bar__fill" [style.width.%]="uploadProgress"></div>
+        </div>
+        <p class="upload-area__progress-text">{{ uploadProgress }}%</p>
+      </div>
+    </div>
+  </div>
+</div>
+

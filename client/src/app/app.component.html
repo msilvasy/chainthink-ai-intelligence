@@ -1,0 +1,132 @@
+<div class="modal-overlay" *ngIf="showVideoModal">
+  <main class="login-page">
+    <section class="video-modal video-fallback" aria-label="Chainthink sign-in">
+      <video
+        #introVideo
+        autoplay
+        loop
+        muted
+        playsinline
+        preload="auto"
+        (canplay)="onVideoReady()"
+        class="video-player"
+        aria-hidden="true"
+      >
+        <source src="./assets/video/chainthink-intro.mp4" type="video/mp4" />
+      </video>
+      <div class="video-toning" aria-hidden="true"></div>
+
+      <div class="login-panel">
+        <div class="brand-logo">
+          <img src="./assets/chainthink-login-logo.png" alt="Chainthink" />
+        </div>
+
+        <form class="login-form" (ngSubmit)="login()">
+          <div class="input-group">
+            <!-- <label class="sr-only" for="email">Email</label> -->
+            <span class="input-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6.75a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.5 20.118a7.5 7.5 0 0 1 15 0A17.932 17.932 0 0 1 12 21.75c-2.676 0-5.216-.584-7.5-1.632Z" />
+              </svg>
+            </span>
+            <input id="email" type="email" class="login-input" placeholder="Email" [(ngModel)]="email" name="email" autocomplete="email" [disabled]="isLoggingIn" required />
+          </div>
+
+          <div class="input-group password-group">
+            <!-- <label class="sr-only" for="password">Password</label> -->
+            <span class="input-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 0 0-9 0v3.75m-1.5 0h12a1.5 1.5 0 0 1 1.5 1.5v7.5A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5V12A1.5 1.5 0 0 1 6 10.5Z" />
+              </svg>
+            </span>
+            <input id="password" type="password" class="login-input" placeholder="Password" [(ngModel)]="password" name="password" autocomplete="current-password" [disabled]="isLoggingIn" required />
+          </div>
+          
+          <p class="login-error" *ngIf="loginError">{{ loginError }}</p>
+          <button type="submit" class="login-btn" [disabled]="isLoggingIn">
+            {{ isLoggingIn ? 'Logging in...' : 'Login' }}
+          </button>
+        </form>
+
+        <div class="feature-copy">
+          <img src="./assets/ai-agentic-administration.png" alt="" />
+          <p><strong><u>AI Agentic Administration</u></strong><br />Intelligent Document Analysis ingests and analyzes regulatory documents, extracting key obligations and mapping them to business processes; it identifies risks and vulnerabilities for early intervention.</p>
+        </div>
+
+        <p class="copyright">© 2026 Chainthink. All rights reserved.</p>
+      </div>
+    </section>
+  </main>
+</div>
+<router-outlet *ngIf="isLoggedIn"></router-outlet>
+
+<button
+  *ngIf="isLoggedIn"
+  type="button"
+  class="fab-launcher"
+  (click)="openInfoModal()"
+  title="Data Input"
+  aria-label="Open data input form"
+>
+  <img src="./assets/train.png" alt="Data input" />
+</button>
+
+<div
+  *ngIf="dataInputModalOpen"
+  class="data-input-modal-overlay"
+  role="presentation"
+  (click)="closeInfoModalOnBackdrop($event)"
+>
+  <section class="data-input-modal" role="dialog" aria-modal="true" aria-labelledby="data-input-modal-title">
+    <header class="data-input-modal__header">
+      <img src="./assets/train.png" alt="" />
+      <h2 id="data-input-modal-title">AI Model Training Metrics</h2>
+      <button type="button" class="data-input-modal__close" (click)="closeInfoModal()" aria-label="Close">&times;</button>
+    </header>
+
+    <form class="data-input-modal__body" (ngSubmit)="saveQuerySettings()">
+      <section class="query-settings">
+        <header class="query-settings__header">
+          <span class="query-settings__icon" aria-hidden="true">&#9888;</span>
+          <div>
+            <h3>Chunking &amp; Overlap Values</h3>
+            <p>Adjust input for higher relevance and similarity.</p>
+          </div>
+        </header>
+
+        <div class="query-settings__body">
+          <label class="query-settings__mode" for="query-mode">
+            Query Mode
+            <select id="query-mode" [(ngModel)]="selectedQueryMode" (ngModelChange)="onQueryModeChange()" name="queryMode">
+              <option value="fast">Fast</option>
+              <option value="balanced">Balanced (Default)</option>
+              <option value="accurate">Accurate</option>
+            </select>
+          </label>
+          <h4><span aria-hidden="true"></span>Vector Query Values</h4>
+          <div class="query-settings__grid">
+            <label>
+              Chunking Size
+              <input type="number" [(ngModel)]="chunkingSize" name="chunkingSize" readonly />
+            </label>
+            <label>
+              Overlap Size
+              <input type="number" [(ngModel)]="overlapSize" name="overlapSize" readonly />
+            </label>
+            <label>
+              TopK Size
+              <input type="number" [(ngModel)]="topKSize" name="topKSize" readonly />
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <footer class="data-input-modal__actions">
+        <button type="button" class="query-button query-button--outline" (click)="clearQuerySettings()">&#8635; Clear All</button>
+        <button type="submit" class="query-button query-button--success">&#10003; Save Query Value Settings</button>
+      </footer>
+    </form>
+  </section>
+</div>
+
+<app-toast></app-toast>

@@ -1,0 +1,60 @@
+<div class="report-viewer">
+  <div class="report-viewer__header">
+    <div>
+      <h3 class="report-viewer__title">{{ report.topic }}</h3>
+      <p class="report-viewer__meta">
+        Generated: {{ formatDate(report.generatedAt) }} • 
+        Processed in {{ report.processingTimeMs.toFixed(0) }}ms
+      </p>
+    </div>
+    <button class="btn btn--primary" (click)="downloadReport()">Download Report</button>
+  </div>
+
+  <div class="report-viewer__content">
+    <section class="report-section">
+      <h4 class="report-section__title">Executive Summary</h4>
+      <p class="report-section__content">{{ report.report.executiveSummary }}</p>
+    </section>
+
+    <section class="report-section">
+      <h4 class="report-section__title">Key Findings</h4>
+      <ul class="report-section__list">
+        <li *ngFor="let finding of report.report.keyFindings" class="report-section__item">
+          {{ finding }}
+        </li>
+      </ul>
+    </section>
+
+    <section class="report-section">
+      <h4 class="report-section__title">Risks</h4>
+      <ul class="report-section__list">
+        <li *ngFor="let risk of report.report.risks" class="report-section__item">
+          {{ risk }}
+        </li>
+      </ul>
+    </section>
+
+    <section class="report-section">
+      <h4 class="report-section__title">Recommendations</h4>
+      <ul class="report-section__list">
+        <li *ngFor="let recommendation of report.report.recommendations" class="report-section__item">
+          {{ recommendation }}
+        </li>
+      </ul>
+    </section>
+
+    <section class="report-section">
+      <h4 class="report-section__title">Sources</h4>
+      <div class="report-sources">
+        <div *ngFor="let source of report.sources" class="report-source">
+          <div class="report-source__header">
+            <span class="report-source__name">{{ source.documentName }}</span>
+            <span class="report-source__score">{{ (source.relevanceScore * 100).toFixed(1) }}% match</span>
+          </div>
+          <p class="report-source__excerpt">{{ source.excerpt }}</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+

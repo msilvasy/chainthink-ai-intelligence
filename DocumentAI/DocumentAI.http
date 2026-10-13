@@ -1,0 +1,58 @@
+@baseUrl = https://localhost:5001
+
+### Health Check
+GET {{baseUrl}}/api/documents/health
+Accept: application/json
+
+### Upload Document (use form-data in actual testing tools like Postman)
+# POST {{baseUrl}}/api/documents/upload
+# Content-Type: multipart/form-data
+# file: @path/to/document.pdf
+
+### Query Documents
+POST {{baseUrl}}/api/documents/query
+Content-Type: application/json
+
+{
+  "query": "What are the main findings from the quarterly report?",
+  "topK": 5
+}
+
+### Query with Document Filter
+POST {{baseUrl}}/api/documents/query
+Content-Type: application/json
+
+{
+  "query": "What are the revenue projections?",
+  "topK": 5,
+  "documentId": "your-document-id-here"
+}
+
+### Generate Report
+POST {{baseUrl}}/api/documents/report
+Content-Type: application/json
+
+{
+  "topic": "Financial performance and market position analysis",
+  "topK": 10
+}
+
+### Generate Report with Additional Instructions
+POST {{baseUrl}}/api/documents/report
+Content-Type: application/json
+
+{
+  "topic": "Risk assessment for the upcoming quarter",
+  "topK": 10,
+  "additionalInstructions": "Focus on operational and market risks. Include mitigation strategies if mentioned."
+}
+
+### Generate Report for Specific Document
+POST {{baseUrl}}/api/documents/report
+Content-Type: application/json
+
+{
+  "topic": "Summary of project milestones and deliverables",
+  "topK": 10,
+  "documentId": "your-document-id-here"
+}

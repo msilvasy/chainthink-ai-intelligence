@@ -1,0 +1,38 @@
+<div class="document-list-container">
+  <div class="document-list-header">
+    <h2 class="document-list-header__title">Documents</h2>
+    <button class="btn btn--primary" (click)="loadDocuments()" [disabled]="isLoading">
+      Refresh
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="document-list-loading">
+    <app-loading-spinner size="large" message="Loading documents..."></app-loading-spinner>
+  </div>
+
+  <div *ngIf="!isLoading" class="document-list">
+    <div *ngIf="(documents$ | async)?.length === 0" class="document-list__empty">
+      <p class="document-list__empty-text">No documents uploaded yet.</p>
+      <p class="document-list__empty-hint">Upload a document to get started.</p>
+    </div>
+
+    <div *ngFor="let document of documents$ | async" class="document-card">
+      <div class="document-card__header">
+        <div class="document-card__icon">📄</div>
+        <div class="document-card__info">
+          <h3 class="document-card__title">{{ document.documentName }}</h3>
+          <p class="document-card__meta">
+            Uploaded: {{ formatDate(document.uploadedAt) }}
+          </p>
+        </div>
+      </div>
+      <div class="document-card__details">
+        <div class="document-card__detail">
+          <span class="document-card__detail-label">Chunks:</span>
+          <span class="document-card__detail-value">{{ document.chunkCount }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

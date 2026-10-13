@@ -1,0 +1,119 @@
+
+<div class="wrap">
+
+  <header>
+    <span class="tag">RAG Architecture Notes</span>
+    <h1>Adding BM25 Hybrid Search to Your RAG Pipeline</h1>
+    <p class="subtitle">Combining keyword search with vector search for a C# + ChromaDB + Ollama system</p>
+  </header>
+
+  <p><strong>BM25 can be a very good addition</strong>, especially for your RAG application. But I would not replace Chroma / vector search with BM25. Instead, I'd use <strong>hybrid search</strong>:</p>
+
+  <div class="callout">
+    <span class="label">Core idea</span>
+    BM25 (keyword search) + vector search (semantic search) → combine / rerank results → send best chunks to Ollama.
+  </div>
+
+  <h2>Why BM25 helps your project</h2>
+  <p>Your current vector search can struggle with things like:</p>
+  <ul>
+    <li>exact document names</li>
+    <li>IDs</li>
+    <li>error codes</li>
+    <li>product names</li>
+    <li>technical terms</li>
+    <li>names / numbers</li>
+    <li>exact phrases</li>
+  </ul>
+
+  <p>For example, if the document contains:</p>
+  <pre><code>SQL Error 18456 Login failed for user</code></pre>
+  <p>A semantic embedding search might find related authentication content, while BM25 is very good at finding the exact <code>18456</code> and <code>Login failed</code> terms.</p>
+
+  <h2>Recommended architecture</h2>
+  <pre class="diagram"><code>User Question
+      │
+      ├───────────────┐
+      │               │
+      ▼               ▼
+   BM25 Search    Vector Search
+      │               │
+      │               │
+      └───────┬───────┘
+              ▼
+       Hybrid/Reranking
+              │
+              ▼
+       Top relevant chunks
+              │
+              ▼
+         Ollama LLM
+              │
+              ▼
+            Answer</code></pre>
+
+  <p>Your current code already has a good place for this: <code>ChromaService.QueryAsync()</code> is doing the vector retrieval, while <code>LlmService</code> consumes the resulting <code>RetrievedContext</code> objects.</p>
+
+  <div class="warning">
+    <span class="label">One important point</span>
+    BM25 does not solve your current <code>537.45</code> distance problem. You should still fix / understand the Chroma metric first. BM25 would be an additional retrieval mechanism, not a fix for that issue.
+  </div>
+
+  <h2>For your C# project</h2>
+  <p>You could implement:</p>
+  <pre><code>ChromaService
+    └── VectorSearchAsync()
+
+Bm25Service
+    └── KeywordSearchAsync()
+
+HybridSearchService
+    ├── Vector results
+    ├── BM25 results
+    ├── Combine/RRF
+    └── Return top K</code></pre>
+
+  <h2>Combining results with Reciprocal Rank Fusion (RRF)</h2>
+  <p>I'd recommend <strong>Reciprocal Rank Fusion (RRF)</strong> for combining BM25 and vector results rather than trying to directly compare BM25 scores with Chroma distances. Their scores are on completely different scales.</p>
+
+  <p>For example:</p>
+  <div class="rrf-scores">
+    <div class="rrf-col">
+      <h3>BM25 ranking</h3>
+      <ol>
+        <li>Document A</li>
+        <li>Document B</li>
+        <li class="muted">…</li>
+        <li>Document C <span class="muted">(rank 5)</span></li>
+      </ol>
+    </div>
+    <div class="rrf-col">
+      <h3>Vector ranking</h3>
+      <ol>
+        <li>Document C</li>
+        <li class="muted">…</li>
+        <li>Document A <span class="muted">(rank 3)</span></li>
+        <li>Document D <span class="muted">(rank 4)</span></li>
+      </ol>
+    </div>
+  </div>
+
+  <p>RRF can combine those rankings without requiring the scores to have the same meaning.</p>
+
+  <h2>My recommendation for your project</h2>
+  <p>Given you're building a C# + ChromaDB + Ollama RAG system, I'd use:</p>
+  <div class="callout">
+    <span class="label">Recommended approach</span>
+    BM25 + vector search + RRF → Ollama
+  </div>
+  <p>rather than relying solely on vector similarity.</p>
+
+  <div class="final">
+    <p>If you want, I can also write a Codex prompt that adds BM25 + hybrid/RRF search to your existing C# project without breaking your current Chroma implementation.</p>
+  </div>
+
+  <footer>
+    RAG pipeline notes · BM25 + Vector Search + RRF
+  </footer>
+
+</div>

@@ -1,0 +1,65 @@
+<div class="embedded-documents-container">
+  <div class="embedded-documents-header">
+    <h2 class="embedded-documents-header__title" style="color: aliceblue;">Embedded Documents</h2>
+    <button class="btn btn--primary" (click)="loadDocuments()" [disabled]="isLoading">
+      Refresh
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="embedded-documents-loading">
+    <app-loading-spinner size="large" message="Loading documents..."></app-loading-spinner>
+  </div>
+
+  <div *ngIf="!isLoading" class="embedded-documents-content">
+    <div *ngIf="documents.length === 0" class="embedded-documents-empty">
+      <p class="embedded-documents-empty__text">No embedded documents found.</p>
+    </div>
+
+    <table *ngIf="documents.length > 0" class="documents-table">
+      <thead>
+        <tr>
+          <th class="documents-table__header">Document Name</th>
+          <th class="documents-table__header">Chunk Count</th>
+          <th class="documents-table__header">Uploaded Date</th>
+          <th class="documents-table__header documents-table__header--actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let document of documents" class="documents-table__row">
+          <td class="documents-table__cell">
+            <span class="documents-table__document-name">{{ document.documentName }}</span>
+          </td>
+          <td class="documents-table__cell">
+            <span class="documents-table__chunk-count">{{ document.chunkCount }}</span>
+          </td>
+          <td class="documents-table__cell">
+            <span class="documents-table__date">{{ formatDate(document.uploadedAt) }}</span>
+          </td>
+          <td class="documents-table__cell documents-table__cell--actions">
+            <div class="documents-table__actions">
+              <!-- <button 
+                class="btn btn--small btn--primary" 
+                (click)="viewChunks(document.documentId)"
+                title="View Chunks"
+              >
+                View Chunks
+              </button> -->
+              <button 
+                class="btn btn--small btn--danger" 
+                (click)="confirmDelete(document.documentId, document.documentName)"
+                title="Delete Embeddings"
+              >
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <app-confirmation-dialog
+    (confirmed)="onDeleteConfirmed()"
+  ></app-confirmation-dialog>
+</div>
+

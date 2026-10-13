@@ -1,0 +1,87 @@
+# Angular / Node.js
+client/node_modules/
+client/dist/
+client/tmp/
+client/out-tsc/
+client/.angular/cache/
+client/.sass-cache/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# .NET / ASP.NET Core
+DocumentAI/bin/
+DocumentAI/obj/
+DocumentAI/*.user
+DocumentAI/*.suo
+DocumentAI/*.userosscache
+DocumentAI/*.sln.docstates
+DocumentAI/.vs/
+DocumentAI/.vscode/
+DocumentAI/*.csproj.user
+DocumentAI/appsettings.Development.json
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+*.sln.iml
+
+# IDEs and editors
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.history/*
+
+# System files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Environment files
+.env
+.env.local
+.env.*.local
+appsettings.Development.json
+
+# Logs
+logs/
+*.log
+
+# Test results
+coverage/
+test-results/
+
+# Miscellaneous
+connect.lock
+libpeerconnection.log
+testem.log
+typings/

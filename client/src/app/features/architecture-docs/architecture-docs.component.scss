@@ -1,0 +1,177 @@
+:root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-border: #2a2e38;
+    --text: #e6e8ec;
+    --muted: #9aa2b1;
+    --accent: #5eb0ef;
+    --accent-soft: rgba(94, 176, 239, 0.12);
+    --code-bg: #10131a;
+    --good: #7fd88f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(180deg, #0b0d11 0%, #0f1115 100%);
+    color: var(--text);
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.65;
+  }
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+  header {
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--panel-border);
+    padding-bottom: 24px;
+  }
+  header .tag {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  h1 {
+    font-size: 28px;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+  header p.subtitle {
+    color: var(--muted);
+    margin: 0;
+    font-size: 15px;
+  }
+  h2 {
+    font-size: 20px;
+    margin: 44px 0 14px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h2::before {
+    content: "";
+    width: 4px;
+    height: 18px;
+    background: var(--accent);
+    border-radius: 2px;
+    display: inline-block;
+  }
+  p { margin: 0 0 14px; color: var(--text); }
+  .muted { color: var(--muted); }
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    background: var(--code-bg);
+    border: 1px solid var(--panel-border);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #f2c94c;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    margin: 0 0 20px;
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #d6dbe4;
+  }
+  .diagram {
+    color: #8fd1ff;
+  }
+  .callout {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 0 0 24px;
+  }
+  .callout .label {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .warning {
+    background: rgba(240, 173, 78, 0.08);
+    border: 1px solid rgba(240, 173, 78, 0.35);
+    border-left: 4px solid #f0ad4e;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 0 0 24px;
+  }
+  .warning .label {
+    font-weight: 700;
+    color: #f0ad4e;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .final {
+    background: linear-gradient(135deg, rgba(94,176,239,0.12), rgba(94,176,239,0.03));
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-top: 12px;
+  }
+  .final p:last-child { margin-bottom: 0; }
+  .rrf-scores {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .rrf-col {
+    flex: 1;
+    min-width: 220px;
+    background: var(--code-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 14px 18px;
+  }
+  .rrf-col h3 {
+    margin: 0 0 10px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+  .rrf-col ol {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 14px;
+  }
+  .rrf-col li { margin-bottom: 4px; }
+  footer {
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--panel-border);
+    color: var(--muted);
+    font-size: 13px;
+  }
+  strong { color: #fff; }

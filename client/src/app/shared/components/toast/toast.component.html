@@ -1,0 +1,18 @@
+<div class="toast-container">
+  <div
+    *ngFor="let notification of notifications"
+    class="toast"
+    [class.toast--success]="notification.type === 'success'"
+    [class.toast--error]="notification.type === 'error'"
+    [class.toast--warning]="notification.type === 'warning'"
+    [class.toast--info]="notification.type === 'info'"
+  >
+    <div class="toast__content">
+      <span class="toast__message">{{ notification.message }}</span>
+      <button class="toast__close" (click)="remove(notification.id)" aria-label="Close">
+        ×
+      </button>
+    </div>
+  </div>
+</div>
+

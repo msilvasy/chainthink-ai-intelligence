@@ -1,0 +1,48 @@
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar__header">
+      <img src="./assets/logo.png" style="width: 220px;"/>
+    </div>
+    <nav class="sidebar__nav">
+      <a
+        *ngFor="let item of menuItems"
+        [routerLink]="item.path"
+        routerLinkActive="active"
+        class="sidebar__item"
+      >
+        <span class="sidebar__icon"><img src="{{ item.icon }}" style="width: 22px"></span>
+        <span class="sidebar__label">{{ item.label }}</span>
+      </a>
+    </nav>
+  </aside>
+  <main class="main-content">
+    <header class="header">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <!-- <h2 class="header__title">Document AI System</h2> -->
+        <div style="text-align: left;"><img src="../../assets/logo-hdr.png"
+            style="width: 250px" /></div>
+            <div class="tagline">intelligent document analysis</div>
+        <div style="display: flex; align-items: center; gap: 24px;">
+          <!-- <div style="text-align: right;" class="tagline">intelligent document analysis</div> -->
+          <span class="header__user" *ngIf="userDisplayName">{{ userDisplayName }}</span>
+          <button type="button" class="header__logout" (click)="logout()">Logout</button>
+        </div>
+      </div>
+    </header>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/jquery.inputmask.bundle.min.js"></script>
+<script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="../../assets/js/videoplayer.js"></script>
+<script src="../../assets/js/app.js"></script>
+
+
+
